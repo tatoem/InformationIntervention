@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Een moment voor u begint | Belastingdienst</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Source+Sans+3:wght@300;400;600&display=swap');
+:root {
+  --blauw: #154273; --lichtblauw: #d4e3f5; --groen: #1a6b3c; --lichtgroen: #d4ede0;
+  --oranje: #c85a00; --tekst: #1a1a1a; --licht: #f7f5f0; --grijs: #6b6b6b; --lijn: #d0ccc4;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Source Sans 3', sans-serif; background: var(--licht); color: var(--tekst); min-height: 100vh; font-size: 18px; line-height: 1.75; }
+
+.topbalk { background: var(--blauw); padding: 12px 28px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.logo { display: flex; align-items: center; gap: 10px; color: white; font-size: 15px; font-weight: 600; }
+.topbalk-rechts { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.tb-knop { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 6px; padding: 6px 14px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.2s; display: flex; align-items: center; gap: 6px; }
+.tb-knop:hover { background: rgba(255,255,255,0.25); }
+.tb-knop.actief { background: rgba(255,255,255,0.3); }
+
+.container { max-width: 740px; margin: 0 auto; padding: 36px 24px 80px; }
+.scherm { display: none; animation: fadeIn 0.5s ease; }
+.scherm.actief { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.voortgang { display: flex; align-items: center; gap: 6px; margin-bottom: 36px; flex-wrap: wrap; }
+.v-stap { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--grijs); white-space: nowrap; }
+.v-stap.actief { color: var(--blauw); font-weight: 700; }
+.v-stap.klaar { color: var(--blauw); }
+.v-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--lijn); flex-shrink: 0; }
+.v-stap.actief .v-dot { background: var(--blauw); }
+.v-stap.klaar .v-dot { background: var(--blauw); }
+.v-lijn { flex: 1; height: 1px; background: var(--lijn); min-width: 12px; }
+
+h1 { font-family: 'Source Serif 4', serif; font-size: clamp(24px, 4vw, 34px); font-weight: 300; line-height: 1.3; color: var(--blauw); margin-bottom: 18px; }
+h1 strong { font-weight: 600; }
+h2 { font-family: 'Source Serif 4', serif; font-size: clamp(21px, 3.5vw, 28px); font-weight: 400; line-height: 1.3; color: var(--blauw); margin-bottom: 14px; }
+h3 { font-size: 14px; font-weight: 700; color: var(--blauw); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
+p { margin-bottom: 14px; }
+.lead { font-size: 20px; line-height: 1.6; margin-bottom: 20px; }
+.badge { display: inline-flex; align-items: center; gap: 8px; background: var(--lichtblauw); color: var(--blauw); padding: 5px 14px; border-radius: 20px; font-size: 14px; font-weight: 700; margin-bottom: 22px; }
+
+.disclaimer { background: white; border: 1px solid var(--lijn); border-left: 4px solid var(--oranje); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 20px 0; font-size: 15px; }
+.disclaimer strong { display: block; font-size: 12px; color: var(--oranje); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+
+.optout { background: white; border: 1px solid var(--lijn); border-radius: 10px; padding: 18px 22px; margin: 24px 0; display: flex; align-items: flex-start; gap: 14px; }
+.optout input[type="checkbox"] { margin-top: 3px; width: 20px; height: 20px; cursor: pointer; accent-color: var(--blauw); flex-shrink: 0; }
+.optout label { font-size: 16px; cursor: pointer; line-height: 1.5; }
+.optout label small { display: block; color: var(--grijs); font-size: 14px; margin-top: 3px; }
+.tijd { display: inline-flex; align-items: center; gap: 6px; color: var(--grijs); font-size: 15px; margin-bottom: 28px; }
+
+.nav { display: flex; gap: 10px; align-items: center; margin-top: 30px; flex-wrap: wrap; }
+.k-terug { background: white; border: 1px solid var(--lijn); color: var(--grijs); border-radius: 8px; padding: 12px 18px; font-family: inherit; font-size: 16px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+.k-terug:hover { border-color: var(--blauw); color: var(--blauw); }
+.k-primair { background: var(--blauw); color: white; border: none; border-radius: 8px; padding: 14px 24px; font-family: inherit; font-size: 17px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s; }
+.k-primair:hover { background: #1a5494; }
+.k-primair:disabled { background: #a0b4cc; cursor: not-allowed; }
+.k-groen { background: var(--blauw); color: white; border: none; border-radius: 8px; padding: 14px 24px; font-family: inherit; font-size: 17px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s; }
+.k-groen:hover { background: #1a5494; }
+.k-groen:disabled { background: #a0b4cc; cursor: not-allowed; }
+.k-tekst { background: none; border: none; color: var(--grijs); font-size: 15px; cursor: pointer; text-decoration: underline; font-family: inherit; padding: 8px; }
+
+.scene { border-radius: 14px; overflow: hidden; margin: 22px 0; }
+.scene-pos { background: linear-gradient(155deg, #154273 0%, #0d2946 100%); }
+.scene-top { padding: 20px 26px 14px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+.scene-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; background: rgba(20,140,70,0.3); }
+.scene-label { color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; }
+.scene-jaar { color: white; font-family: 'Source Serif 4', serif; font-size: 18px; font-weight: 300; }
+.scene-body { padding: 20px 26px 24px; }
+.scene-tekst { font-family: 'Source Serif 4', serif; font-size: clamp(16px, 2.3vw, 18px); line-height: 1.9; color: rgba(255,255,255,0.88); font-weight: 300; }
+.scene-tekst em { font-style: normal; color: white; font-weight: 400; }
+
+.eft-box { background: white; border: 2px solid var(--lichtblauw); border-radius: 12px; padding: 24px 26px; margin: 22px 0; }
+.eft-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.eft-oog { font-size: 24px; }
+.eft-instructie { font-size: 17px; font-style: italic; color: var(--blauw); background: var(--lichtblauw); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; line-height: 1.65; }
+.eft-vragen { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+.eft-vraag label { display: block; font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+.eft-vraag p { font-size: 14px; color: var(--grijs); margin-bottom: 6px; }
+
+.ta-wrap { position: relative; }
+textarea { width: 100%; border: 1px solid var(--lijn); border-radius: 8px; padding: 11px 46px 11px 13px; font-family: inherit; font-size: 16px; line-height: 1.6; color: var(--tekst); background: #fafaf8; resize: vertical; min-height: 76px; transition: border-color 0.2s; }
+textarea:focus { outline: none; border-color: var(--blauw); background: white; }
+textarea::placeholder { color: #bbb; }
+.mic-btn { position: absolute; right: 10px; top: 10px; background: none; border: none; cursor: pointer; padding: 4px; border-radius: 6px; color: var(--grijs); transition: color 0.2s, background 0.2s; font-size: 18px; line-height: 1; }
+.mic-btn:hover { color: var(--blauw); background: var(--lichtblauw); }
+.mic-btn.luisteren { color: #c0000a; animation: puls 1s ease-in-out infinite; }
+@keyframes puls { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.mic-status { font-size: 12px; color: var(--grijs); margin-top: 3px; min-height: 16px; }
+.mic-status.actief { color: #c0000a; }
+
+.vinkje { display: flex; align-items: flex-start; gap: 14px; background: #f0f4fa; border: 2px solid var(--lijn); border-radius: 10px; padding: 15px 18px; cursor: pointer; transition: border-color 0.2s, background 0.2s; margin-top: 4px; }
+.vinkje:hover { border-color: var(--blauw); }
+.vinkje.aan { border-color: var(--blauw); background: var(--lichtblauw); }
+.vinkje input[type="checkbox"] { width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; cursor: pointer; accent-color: var(--blauw); }
+.vinkje label { font-size: 16px; font-weight: 600; cursor: pointer; line-height: 1.5; }
+.vinkje.aan label { color: var(--blauw); }
+
+.afsluiting { background: linear-gradient(135deg, var(--blauw) 0%, #1a5494 100%); border-radius: 14px; padding: 36px; color: white; text-align: center; }
+.afsluiting h2 { color: white; }
+.afsluiting p { color: rgba(255,255,255,0.85); margin-bottom: 8px; }
+.afsluiting .k-primair { background: white; color: var(--blauw); margin-top: 22px; }
+.afsluiting .k-primair:hover { background: #e8f0fa; }
+.druppel { font-size: 52px; display: block; margin-bottom: 14px; }
+
+.einde-box { background: white; border: 1px solid var(--lijn); border-radius: 14px; padding: 40px 36px; text-align: center; margin-top: 10px; }
+.einde-icon { font-size: 52px; display: block; margin-bottom: 18px; }
+.einde-box h2 { color: var(--blauw); margin-bottom: 12px; }
+.einde-box p { color: var(--grijs); max-width: 480px; margin: 0 auto 10px; }
+.einde-box .k-primair { margin-top: 24px; font-size: 18px; }
+
+.vividheid-blok { margin: 20px 0 6px; }
+.vividheid-blok label { display: block; font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+.vividheid-blok p { font-size: 14px; color: var(--grijs); margin-bottom: 10px; }
+.vividheid-schaal { display: flex; gap: 8px; flex-wrap: wrap; }
+.vividheid-schaal input[type="radio"] { display: none; }
+.vividheid-schaal label.v-optie { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; border: 2px solid var(--lijn); border-radius: 10px; padding: 10px 14px; font-size: 15px; font-weight: 700; min-width: 52px; transition: border-color 0.2s, background 0.2s; background: white; line-height: 1.2; }
+.vividheid-schaal label.v-optie span.v-sub { font-size: 10px; font-weight: 400; color: var(--grijs); text-align: center; }
+.vividheid-schaal input[type="radio"]:checked + label.v-optie { border-color: var(--blauw); background: var(--lichtblauw); color: var(--blauw); }
+.vividheid-schaal input[type="radio"]:checked + label.v-optie .v-sub { color: var(--blauw); }
+.laag-vividheid-hint { background: #fff8e1; border: 1px solid #f5c842; border-left: 4px solid #f5c842; border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 15px; margin: 12px 0; display: none; }
+.laag-vividheid-hint.zichtbaar { display: block; }
+
+.info-blok { margin: 28px 0 24px; }
+.info-blok-intro { font-size: 16px; color: var(--grijs); margin-bottom: 18px; line-height: 1.65; border-left: 3px solid var(--lichtblauw); padding-left: 14px; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 6px; }
+@media (max-width: 560px) { .info-grid { grid-template-columns: 1fr; } }
+.info-kaart { background: white; border: 1px solid var(--lijn); border-radius: 10px; padding: 16px 18px; display: flex; gap: 13px; align-items: flex-start; transition: border-color 0.2s; }
+.info-kaart:hover { border-color: var(--blauw); }
+.info-kaart-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+.info-kaart-tekst strong { display: block; font-size: 14px; font-weight: 700; color: var(--blauw); margin-bottom: 4px; letter-spacing: 0.01em; }
+.info-kaart-tekst p { font-size: 14px; color: var(--grijs); line-height: 1.55; margin: 0; }
+.info-kaart-vol { grid-column: 1 / -1; }
+.info-oproep { background: var(--lichtblauw); border-radius: 10px; padding: 14px 18px; font-size: 15px; color: var(--blauw); font-weight: 600; display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+:focus-visible { outline: 3px solid var(--oranje); outline-offset: 3px; border-radius: 4px; }
+
+body.hoog-contrast { --blauw: #003580; --lichtblauw: #b8d0f0; --tekst: #000000; --licht: #ffffff; --grijs: #333333; --lijn: #555555; }
+body.hoog-contrast textarea { background: #ffffff; border-color: #000; }
+body.hoog-contrast .scene-pos { background: #000; }
+body.hoog-contrast .scene-tekst { color: #ffffff; }
+body.hoog-contrast .k-terug { border-color: #000; color: #000; }
+body.hoog-contrast .laag-vividheid-hint { background: #fff9c4; border-color: #8a6a00; }
+
+@media (max-width: 560px) {
+  .container { padding: 18px 14px 60px; }
+  .scene-body, .scene-top { padding: 16px; }
+  .eft-box { padding: 18px; }
+  .einde-box { padding: 28px 20px; }
+  .nav { flex-direction: column; align-items: stretch; }
+  .nav .k-tekst { text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<body>
+
+<header class="topbalk" role="banner">
+  <div class="logo">
+    <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect width="32" height="32" rx="4" fill="#4a90d4"/><path d="M8 10h16M8 16h12M8 22h8" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
+    <span data-t="bd_naam">Belastingdienst</span>
+  </div>
+  <div class="topbalk-rechts">
+    <button class="tb-knop" id="btn-voorlees" onclick="toggleVoorlezen()" aria-label="Voorleesfunctie aan/uitzetten">
+      <span aria-hidden="true">&#128266;</span> <span data-t="voorlees">Voorlezen</span>
+    </button>
+    <button class="tb-knop" id="btn-contrast" onclick="toggleContrast()" aria-label="Hoog contrast aan/uitzetten">
+      <span aria-hidden="true">&#9680;</span> <span data-t="contrast">Contrast</span>
+    </button>
+    <button class="tb-knop" onclick="wisselTaal()" id="btn-taal" aria-label="Switch language / Wissel taal">EN</button>
+  </div>
+</header>
+
+<main class="container">
+
+<section class="scherm actief" id="s0" aria-labelledby="t-s0">
+  <div class="voortgang" role="navigation" aria-label="Voortgang">
+    <div class="v-stap actief"><div class="v-dot"></div><span data-t="s_intro">Introductie</span></div>
+    <div class="v-lijn"></div>
+    <div class="v-stap"><div class="v-dot"></div><span data-t="s_info">Informatie</span></div>
+    <div class="v-lijn"></div>
+    <div class="v-stap"><div class="v-dot"></div><span data-t="s_scenario">Scenario</span></div>
+    <div class="v-lijn"></div>
+    <div class="v-stap"><div class="v-dot"></div><span data-t="s_verbeelding">Verbeelding</span></div>
+    <div class="v-lijn"></div>
+    <div class="v-stap"><div class="v-dot"></div><span data-t="s_af">Afsluiting</span></div>
+  </div>
+
+  <div class="badge">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    <span data-t="voor_badge">Voordat u begint</span>
+  </div>
+
+  <h1 id="t-s0"><span data-t="s0_h1">Even <strong>twee minuten</strong> voor u begint</span></h1>
+  <p class="lead" data-t="s0_lead">We vragen u kort stil te staan bij iets dat iedereen in Nederland raakt: ons drinkwater.</p>
+  <p data-t="s0_p1">Dit is geen onderdeel van uw belastingaangifte. Het is een kort moment om na te denken over de toekomst, voor uzelf, uw omgeving en de mensen na ons.</p>
+
+  <div class="disclaimer" role="note">
+    <strong data-t="disc_titel">Disclaimer</strong>
+    <span data-t="disc_tekst">Deze sessie maakt geen deel uit van uw belastingaangifte en heeft geen invloed op uw aangifte. Uw antwoorden worden niet opgeslagen en niet gedeeld met de Belastingdienst of derden.</span>
+  </div>
+
+  <div class="tijd" aria-label="Tijdsduur">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    <span data-t="tijdsduur">Duurt ongeveer 3 minuten</span>
+  </div>
+
+  <div class="optout" role="group">
+    <input type="checkbox" id="skip-check" aria-describedby="skip-info">
+    <label for="skip-check">
+      <span data-t="skip_label">Ik wil dit overslaan en direct naar mijn aangifte</span>
+      <small id="skip-info" data-t="skip_sub">U kunt op elk moment doorgaan zonder de sessie af te ronden.</small>
+    </label>
+  </div>
+
+  <div class="nav">
+    <button class="k-primair" id="s0-knop" onclick="gaanaar(1)">
+      <span data-t="s0_btn">Ik doe mee</span>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+    <button class="k-tekst" onclick="window.location.href='https://uva.fra1.qualtrics.com/jfe/form/SV_bC10e0AaOJ9H3uK'"><span data-t="direct_aangifte">Direct naar aangifte</span></button>
+  </div>
+</section>
+
+<section class="scherm" id="s1" aria-labelledby="t-s1-info">
+  <div class="voortgang" role="navigation" aria-label="Voortgang">
+    <div class="v-stap klaar"><div class="v-dot"></div><span data-t="s_intro_v">Introductie &#10003;</span></div>
+    <div class="v-lijn"></div>
+    <div class="v-stap actief"><div class="v-dot"></div><span data-t="s_info">Informatie</span></div>
+    <div class="v-lijn"></div>
+    <div class="v-stap"><div class="v-dot"></div><span data-t="s_scenario">Scenario</span></div>
+    <div class="v-lijn"></div>
+    <div class="v-stap"><div class="v-dot"></div><span data-t="s_verbeelding">Verbeelding</span></div>
+    <div class="v-lijn"></div>
+    <div class="v-stap"><div class="v-dot"></div><span data-t="s_af">Afsluiting</span></div>
+  </div>
+
+  <h2 id="t-s1-info"><span data-t="info_h2">Waarom is dit belangrijk?</span></h2>
+  
+  <div class="info-blok" role="region" aria-label="Achtergrondinformatie drinkwater">
+    <p class="info-blok-intro" data-t="info_p1">We hebben allemaal toegang tot drinkwater uit de kraan, iets wat we vaak als vanzelfsprekend beschouwen. Het doel is dat dit zo blijft. Het waterverbruik in Nederland stijgt echter, terwijl de beschikbaarheid afneemt. Als er niets verandert, kunnen rond 2030 alle regio's te maken krijgen met drinkwatertekorten.</p>
+    <div class="info-grid">
+      <div class="info-kaart">
+        <div class="info-kaart-icon">🏠</div>
+        <div class="info-kaart-tekst">
+          <strong data-t="info_k1_t">Huishoudens</strong>
+          <p data-t="info_k1_p">Bestaande woningen blijven drinkwater ontvangen, maar mogelijk met lagere waterdruk of beperkingen. Nieuwbouwwijken kunnen vertraging oplopen bij de aansluiting. Dit remt de woningbouw en werkt de woningkrapte in de hand. Hogere investeringskosten kunnen ook leiden tot hogere waterprijzen, extra voelbaar voor lagere inkomens.</p>
+        </div>
+      </div>
+      <div class="info-kaart">
+        <div class="info-kaart-icon">🏭</div>
+        <div class="info-kaart-tekst">
+          <strong data-t="info_k2_t">Bedrijven &amp; landbouw</strong>
+          <p data-t="info_k2_p">Water is onmisbaar voor bedrijven en de landbouw. Als de beschikbaarheid afneemt, kunnen bedrijven hun vestigingskeuze herzien. Dit raakt banen en economische groei. In de landbouw kan schaarste zelfs leiden tot verplaatsing van boerenbedrijven naar andere landen, economisch onwenselijk.</p>
+        </div>
+      </div>
+      <div class="info-kaart">
+        <div class="info-kaart-icon">🌿</div>
+        <div class="info-kaart-tekst">
+          <strong data-t="info_k3_t">Natuur &amp; milieu</strong>
+          <p data-t="info_k3_p">Meer wateronttrekking verlaagt het grondwaterpeil en bedreigt kwetsbare ecosystemen zoals duinen en veengebieden. Waterzuivering kost ook energie en chemicaliën, zeker voor stoffen als PFAS. Elk liter water dat niet gebruikt wordt, vermindert die druk.</p>
+        </div>
+      </div>
+      <div class="info-kaart">
+        <div class="info-kaart-icon">🌍</div>
+        <div class="info-kaart-tekst">
+          <strong data-t="info_k4_t">Onafhankelijkheid</strong>
+          <p data-t="info_k4_p">Nederland is deels afhankelijk van oppervlaktewater uit buurlanden zoals Duitsland, België en Zwitserland. Dit creëert externe afhankelijkheden die kwetsbaar kunnen zijn bij internationale spanningen of klimaatverandering.</p>
+        </div>
+      </div>
+      <div class="info-kaart info-kaart-vol">
+        <div class="info-kaart-icon">💧</div>
+        <div class="info-kaart-tekst">
+          <strong data-t="info_k5_t">Wat kunt u doen?</strong>
+          <p data-t="info_k5_p">Iedereen kan bijdragen door waar mogelijk minder water te gebruiken. Kleine veranderingen in dagelijkse gewoonten, zoals korter douchen, de wasmachine alleen vol draaien en de spaarknop van het toilet gebruiken, maken samen een betekenisvolle impact.</p>
+        </div>
+      </div>
+    </div>
+    <div class="info-oproep">
+      <span data-t="info_oproep">Samen zorgen we dat drinkwater voor iedereen beschikbaar blijft.</span>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="k-terug" onclick="gaanaar(0)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span data-t="terug">Terug</span>
+    </button>
+    <button class="k-primair" onclick="window.location.href='https://uva.fra1.qualtrics.com/jfe/form/SV_bC10e0AaOJ9H3uK'">
+      <span data-t="terug_survey">Terug naar de vragenlijst</span>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+</main>
+
+<script>
+let huidig = 0;
+let taal = 'nl';
+let voorlezenAan = false;
+let actieveMic = null;
+let herkenning = null;
+
+const T = {
+  nl: {
+    bd_naam:'Belastingdienst', voorlees:'Voorlezen', contrast:'Contrast',
+    s_intro:'Introductie', s_intro_v:'Introductie',
+    s_info:'Informatie', s_info_v:'Informatie',
+    s_scenario:'Scenario', s_scenario_v:'Scenario',
+    s_verbeelding:'Verbeelding', s_verbeelding_v:'Verbeelding',
+    s_af:'Afsluiting', s_af_v:'Afsluiting',
+    voor_badge:'Voordat u begint',
+    s0_h1:'Even <strong>twee minuten</strong> voor u begint',
+    s0_lead:'We vragen u kort stil te staan bij iets dat iedereen in Nederland raakt: ons drinkwater.',
+    s0_p1:'Dit is geen onderdeel van uw belastingaangifte. Het is een kort moment om na te denken over de toekomst, voor uzelf, uw omgeving en de mensen na ons.',
+    disc_titel:'Disclaimer',
+    disc_tekst:'Deze sessie maakt geen deel uit van uw belastingaangifte en heeft geen invloed op uw aangifte. Uw antwoorden worden niet opgeslagen en niet gedeeld met de Belastingdienst of derden.',
+    tijdsduur:'Duurt ongeveer 3 minuten',
+    skip_label:'Ik wil dit overslaan en direct naar mijn aangifte',
+    skip_sub:'U kunt op elk moment doorgaan zonder de sessie af te ronden.',
+    s0_btn:'Ik doe mee', direct_aangifte:'Direct naar aangifte',
+    info_h2:'Waarom is dit belangrijk?',
+    info_p1:'We hebben allemaal toegang tot drinkwater uit de kraan, iets wat we vaak als vanzelfsprekend beschouwen. Het doel is dat dit zo blijft. Het waterverbruik in Nederland stijgt echter, terwijl de beschikbaarheid afneemt. Als er niets verandert, kunnen rond 2030 alle regio\'s te maken krijgen met drinkwatertekorten.',
+    info_k1_t:'Huishoudens', info_k1_p:'Bestaande woningen blijven drinkwater ontvangen, maar mogelijk met lagere waterdruk of beperkingen. Nieuwbouwwijken kunnen vertraging oplopen bij de aansluiting. Dit remt de woningbouw en werkt de woningkrapte in de hand. Hogere investeringskosten kunnen ook leiden tot hogere waterprijzen, extra voelbaar voor lagere inkomens.',
+    info_k2_t:'Bedrijven & landbouw', info_k2_p:'Water is onmisbaar voor bedrijven en de landbouw. Als de beschikbaarheid afneemt, kunnen bedrijven hun vestigingskeuze herzien. Dit raakt banen en economische groei. In de landbouw kan schaarste zelfs leiden tot verplaatsing van boerenbedrijven naar andere landen, economisch onwenselijk.',
+    info_k3_t:'Natuur & milieu', info_k3_p:'Meer wateronttrekking verlaagt het grondwaterpeil en bedreigt kwetsbare ecosystemen zoals duinen en veengebieden. Waterzuivering kost ook energie en chemicaliën, zeker voor stoffen als PFAS. Elk liter water dat niet gebruikt wordt, vermindert die druk.',
+    info_k4_t:'Onafhankelijkheid', info_k4_p:'Nederland is deels afhankelijk van oppervlaktewater uit buurlanden zoals Duitsland, België en Zwitserland. Dit creëert externe afhankelijkheden die kwetsbaar kunnen zijn bij internationale spanningen of klimaatverandering.',
+    info_k5_t:'Wat kunt u doen?', info_k5_p:'Iedereen kan bijdragen door waar mogelijk minder water te gebruiken. Kleine veranderingen in dagelijkse gewoonten, zoals korter douchen, de wasmachine alleen vol draaien en de spaarknop van het toilet gebruiken, maken samen een betekenisvolle impact.',
+    info_oproep:'Samen zorgen we dat drinkwater voor iedereen beschikbaar blijft.',
+    volgende:'Volgende',
+    s1_h2:'Het jaar 2035',
+    s1_intro:'Lees de onderstaande beschrijving rustig door. Probeer u dit moment zo levendig mogelijk voor te stellen: hoe het eruit ziet, hoe het klinkt en hoe het voelt. Het gaat om een realistische toekomst, geen fictie.',
+    situatieschets:'Situatieschets',
+    s1_jaar:'2035 na tien jaar bewuste gewoonten',
+    s1_tekst:'Het is 2035. Je staat onder de douche en draait de kraan na een paar minuten dicht. Zonder erbij na te denken. Net als tandenpoetsen is het een gewoonte geworden, iets kleins dat je automatisch doet, net als de meeste mensen.<br><br>Later die dag belt een familielid dat ze de sleutel hebben gekregen van hun nieuwe huis, vlakbij. Je weet nog hoe nieuwbouw soms moest wachten op een aansluiting. Nu niet meer. <em>Er is genoeg drinkwater om nieuwe woningen direct aan te sluiten.</em><br><br>Een vriend vertelt je dat hij net een nieuwe baan heeft gekregen bij een bedrijf in de regio. Dat bedrijf kon blijven en zelfs uitbreiden, omdat waterzekerheid geen probleem meer is. <em>Dat voelt goed voor hem en voor de regio.</em><br><br>Tijdens een wandeling zie je dat natuurgebieden er gezonder uitzien. De grond is minder droog en water hoeft minder intensief gezuiverd te worden. <em>Dat scheelt energie en middelen.</em><br><br>Je merkt ook dat Nederland minder afhankelijk is van water uit het buitenland. Dat geeft een gevoel van zekerheid, dat het systeem robuust is en je erop kunt vertrouwen.<br><br>Voor jou voelt het dagelijks leven eigenlijk hetzelfde. De waterdruk is stabiel, er zijn geen onverwacht hoge rekeningen en je kunt nog steeds gewoon drinken en koken zoals je gewend bent. <em>De kleine gewoontes, zoals korter douchen of een vollere wasmachine, hebben je kwaliteit van leven nauwelijks veranderd, maar hebben wel bijgedragen aan meer zekerheid.</em>',
+    s1_btn:'Dit moment verbeelden', terug:'Terug', overslaan:'Overslaan',
+    s2_h2:'Stel u dit moment echt voor',
+    s2_intro:'Neem even de tijd. Sluit eventueel uw ogen. Beantwoord de vier vragen hieronder zo concreet mogelijk, dit helpt het moment levendiger te maken. U kunt typen, op het microfoonpictogram drukken om te spreken, of een vel papier pakken en het moment schetsen.',
+    eft_h:'Verbeeldingsoefening',
+    eft_instructie:'U bent in 2035. U heeft jarenlang kleine gewoonten volgehouden: korter douchen, eco-stand, de kleine knop. Het leek onbeduidend, maar samen heeft het iets echts teweeggebracht. Stel u dit moment zo levendig mogelijk voor, alsof u er werkelijk bent.',
+    eft_q1_l:'Waar bent u?',
+    eft_q1_p:'Beschrijf de plek zo concreet mogelijk.',
+    eft_q2_l:'Wie is er bij u?',
+    eft_q2_p:'Beschrijf wie er aanwezig is in dit moment.',
+    eft_q3_l:'Wat doet u?',
+    eft_q3_p:'Beschrijf wat u aan het doen bent.',
+    eft_q4_l:'Hoe voelt u zich?',
+    eft_q4_p:'Beschrijf wat er door u heen gaat.',
+    vinkje_tekst:'Ik heb me dit scenario voorgesteld',
+    viv_label:'Hoe levendig was uw verbeelding?',
+    viv_sub:'Geef aan hoe helder en concreet u het scenario voor u zag, 1 is nauwelijks, 5 is alsof u er werkelijk was.',
+    viv_1:'Nauwelijks',
+    viv_5:'Heel levendig',
+    viv_hint:'Uw verbeelding was nog niet zo helder. Probeer het opnieuw: sluit uw ogen, adem diep in en stel u het moment zo concreet mogelijk voor. Waar staat u? Wat ruikt u? Wat hoort u? Vul daarna de vragen opnieuw in.',
+    s2_btn:'Naar de afsluiting',
+    af_h2:'Bedankt voor dit moment',
+    af_p1:'U heeft nagedacht over iets dat er echt toe doet, voor uw omgeving, voor de natuur en voor de mensen na ons.',
+    af_p2:'Kleine gewoonten van velen maken een groot verschil.',
+    af_btn:'Terug naar de vragenlijst',
+    af_disc:'Deze sessie maakt geen deel uit van uw belastingaangifte. Uw antwoorden worden niet opgeslagen.',
+    einde_h:'Dit was het einde van de interventie',
+    einde_p1:'U heeft de sessie afgerond. Ga nu terug naar Qualtrics om de vragenlijst verder in te vullen.',
+    einde_p2:'Klik op de knop hieronder of ga terug naar het browsertabblad met de vragenlijst.',
+    einde_btn:'Terug naar het begin (prototype)',
+    skip_btn_alt:'Direct naar aangifte',
+    terug_survey:'Terug naar de vragenlijst',
+    mic_spreek:'Spreek nu',
+    mic_klaar:'Verwerkt',
+    mic_fout:'Spraakherkenning niet beschikbaar in deze browser',
+    mic_geweig:'Microfoon geweigerd. Controleer uw browserinstellingen.',
+  },
+  en: {
+    bd_naam:'Tax Authority', voorlees:'Read aloud', contrast:'Contrast',
+    s_intro:'Introduction', s_intro_v:'Introduction',
+    s_info:'Information', s_info_v:'Information',
+    s_scenario:'Scenario', s_scenario_v:'Scenario',
+    s_verbeelding:'Imagination', s_verbeelding_v:'Imagination',
+    s_af:'Closing', s_af_v:'Closing',
+    voor_badge:'Before you begin',
+    s0_h1:'Just <strong>two minutes</strong> before you begin',
+    s0_lead:'We ask you to briefly reflect on something that affects everyone in the Netherlands: our drinking water.',
+    s0_p1:'This is not part of your tax return. It is a brief moment to think about the future, for yourself, your community, and those who come after us.',
+    disc_titel:'Disclaimer',
+    disc_tekst:'This session is not part of your tax return and has no effect on your return. Your answers are not saved and not shared with the Tax Authority or third parties.',
+    tijdsduur:'Takes about 3 minutes',
+    skip_label:'I want to skip this and go directly to my return',
+    skip_sub:'You can proceed at any time without completing the session.',
+    s0_btn:"I'll participate", direct_aangifte:'Go directly to return',
+    info_h2:'Why is this important?',
+    info_p1:'We all have access to drinking water from the tap, something we often take for granted. The goal is to keep it that way. However, water consumption in the Netherlands is rising, while availability is decreasing. If nothing changes, all regions could face drinking water shortages by around 2030.',
+    info_k1_t:'Households', info_k1_p:'Existing homes will continue to receive drinking water, but possibly with lower water pressure or restrictions. New construction projects may face delays in connection. This slows down housing construction and exacerbates the housing shortage. Higher investment costs can also lead to higher water prices, particularly felt by lower-income households.',
+    info_k2_t:'Business & Agriculture', info_k2_p:'Water is indispensable for businesses and agriculture. If availability decreases, companies may reconsider their location choices, affecting jobs and economic growth. In agriculture, scarcity could even lead to farmers relocating to other countries, economically undesirable.',
+    info_k3_t:'Nature & Environment', info_k3_p:'More water extraction lowers groundwater levels and threatens vulnerable ecosystems like dunes and peatlands. Water purification also costs energy and chemicals, especially for substances like PFAS. Every liter of water not used reduces that pressure.',
+    info_k4_t:'Independence', info_k4_p:'The Netherlands is partly dependent on surface water from neighboring countries such as Germany, Belgium, and Switzerland. This creates external dependencies that can be vulnerable during international tensions or climate change.',
+    info_k5_t:'What can you do?', info_k5_p:'Everyone can contribute by using less water where possible. Small changes in daily habits, such as shorter showers, using full washing machine loads, and using the dual-flush toilet button, together make a meaningful impact.',
+    info_oproep:'Together we ensure drinking water remains available for everyone.',
+    volgende:'Next',
+    s1_h2:'The year 2035',
+    s1_intro:'Read the description below carefully. Try to imagine this moment as vividly as possible: how it looks, how it sounds and how it feels. This is a realistic future, not a fictional one.',
+    situatieschets:'Scenario',
+    s1_jaar:'2035 after ten years of conscious habits',
+    s1_tekst:'It is 2035. You are in the shower and turn off the tap after a few minutes. Without thinking about it. Like brushing your teeth, it has become a habit, something small you do automatically, just like most people.<br><br>Later that day, a family member calls to say they have received the keys to their new home, nearby. You remember how new builds sometimes had to wait for a connection. Not anymore. <em>There is enough drinking water to connect new homes straight away.</em><br><br>A friend tells you he has just started a new job at a company in the region. That company was able to stay and even expand, because water security is no longer an issue. <em>That feels good for him and for the region.</em><br><br>On a walk you notice that nature areas look healthier. The soil is less dry and water no longer needs to be purified as intensively. <em>That saves energy and resources.</em><br><br>You also notice that the Netherlands is less dependent on water from abroad. It gives a sense of security, that the system is robust and you can rely on it.<br><br>For you, daily life feels pretty much the same. The water pressure is stable, there are no unexpectedly high bills, and you can still drink and cook just as you always have. <em>The small habits, like shorter showers or running a fuller washing machine, have barely changed your quality of life, but they have contributed to greater security.</em>',
+    s1_btn:'Imagine this moment', terug:'Back', overslaan:'Skip',
+    s2_h2:'Truly imagine this moment',
+    s2_intro:'Take a moment. You may close your eyes. Answer the four questions below as concretely as you can, this helps make the scenario more vivid. You can type, press the microphone icon to speak, or grab a piece of paper and sketch the moment.',
+    eft_h:'Imagination exercise',
+    eft_instructie:'You are in 2035. For years you have kept up small habits: shorter showers, eco mode, the small button. It seemed insignificant, but together it has brought about something real. Imagine this moment as vividly as possible, as if you are truly there.',
+    eft_q1_l:'Where are you?',
+    eft_q1_p:'Describe the place as concretely as possible.',
+    eft_q2_l:'Who is with you?',
+    eft_q2_p:'Describe who is present in this moment.',
+    eft_q3_l:'What are you doing?',
+    eft_q3_p:'Describe what you are doing.',
+    eft_q4_l:'How do you feel?',
+    eft_q4_p:'Describe what goes through your mind.',
+    vinkje_tekst:'I have imagined this scenario',
+    viv_label:'How vivid was your imagination?',
+    viv_sub:'Indicate how clear and concrete the scenario felt to you,1 is barely at all, 5 is as if you were truly there.',
+    viv_1:'Barely',
+    viv_5:'Very vivid',
+    viv_hint:'Your imagination was not yet very vivid. Please try again: close your eyes, take a deep breath, and picture the moment as concretely as you can. Where are you standing? What do you smell? What do you hear? Then fill in the questions again.',
+    s2_btn:'To the closing',
+    af_h2:'Thank you for this moment',
+    af_p1:'You have reflected on something that truly matters, for your community, for nature, and for those who come after us.',
+    af_p2:'Small habits by many make a big difference.',
+    af_btn:'Back to the survey',
+    af_disc:'This session is not part of your tax return. Your answers are not saved.',
+    einde_h:'This was the end of the intervention',
+    einde_p1:'You have completed the session. Please return to Qualtrics to continue filling in the survey.',
+    einde_p2:'Click the button below or switch back to the browser tab with the survey.',
+    einde_btn:'Back to the start (prototype)',
+    skip_btn_alt:'Go directly to return',
+    terug_survey:'Back to the survey',
+    mic_spreek:'Speak now',
+    mic_klaar:'Processed',
+    mic_fout:'Speech recognition not available in this browser',
+    mic_geweig:'Microfoon geweigerd. Controleer uw browserinstellingen.',
+  }
+};
+
+function renderTaal() {
+  document.documentElement.lang = taal;
+  const t = T[taal];
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  const micLabel = taal === 'nl' ? 'Spreek uw antwoord in' : 'Speak your answer';
+  document.querySelectorAll('.mic-btn').forEach(btn => {
+    btn.setAttribute('aria-label', micLabel);
+    btn.setAttribute('title', micLabel);
+  });
+}
+
+function wisselTaal() {
+  taal = taal === 'nl' ? 'en' : 'nl';
+  document.getElementById('btn-taal').textContent = taal === 'nl' ? 'EN' : 'NL';
+  stopSpreken();
+  renderTaal();
+}
+
+function gaanaar(nr) {
+  stopVoorlezen();
+  stopSpreken();
+  document.getElementById('s' + huidig).classList.remove('actief');
+  const nieuw = document.getElementById('s' + nr);
+  if (!nieuw) return;
+  nieuw.classList.add('actief');
+  huidig = nr;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => {
+    const el = nieuw.querySelector('h1, h2');
+    if (el) { el.setAttribute('tabindex', '-1'); el.focus(); }
+    if (voorlezenAan) leesSchermVoor();
+  }, 400);
+}
+
+function toggleVinkje(cbId, btnId) {
+  const cb = document.getElementById(cbId);
+  const wrap = document.getElementById(cbId + '-wrap');
+  const btn = document.getElementById(btnId);
+  cb.checked = !cb.checked;
+  wrap.classList.toggle('aan', cb.checked);
+  if (btn) btn.disabled = !cb.checked;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const cb = document.getElementById('v1');
+  if (cb) {
+    cb.addEventListener('click', e => {
+      e.stopPropagation();
+      const wrap = document.getElementById('v1-wrap');
+      const btn = document.getElementById('s2-btn');
+      wrap.classList.toggle('aan', cb.checked);
+      if (btn) btn.disabled = !cb.checked;
+    });
+  }
+  document.getElementById('skip-check').addEventListener('change', function() {
+    const knop = document.getElementById('s0-knop');
+    const span = knop.querySelector('span');
+    if (this.checked) {
+      span.setAttribute('data-t', 'skip_btn_alt');
+      knop.onclick = () => window.location.href='https://uva.fra1.qualtrics.com/jfe/form/SV_bC10e0AaOJ9H3uK';
+    } else {
+      span.setAttribute('data-t', 's0_btn');
+      knop.onclick = () => gaanaar(1);
+    }
+    renderTaal();
+  });
+  renderTaal();
+});
+
+function toggleContrast() {
+  document.body.classList.toggle('hoog-contrast');
+  document.getElementById('btn-contrast').classList.toggle('actief', document.body.classList.contains('hoog-contrast'));
+}
+
+function checkVividheid() {
+  const val = parseInt(document.querySelector('input[name="vividheid"]:checked')?.value || '0');
+  const hint = document.getElementById('laag-vividheid-hint');
+  if (!hint) return;
+  if (val > 0 && val <= 2) {
+    hint.classList.add('zichtbaar');
+  } else {
+    hint.classList.remove('zichtbaar');
+  }
+}
+
+function toggleVoorlezen() {
+  voorlezenAan = !voorlezenAan;
+  document.getElementById('btn-voorlees').classList.toggle('actief', voorlezenAan);
+  if (voorlezenAan) leesSchermVoor();
+  else stopVoorlezen();
+}
+function stopVoorlezen() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+}
+function leesSchermVoor() {
+  stopVoorlezen();
+  if (!voorlezenAan || !window.speechSynthesis) return;
+  const s = document.getElementById('s' + huidig);
+  if (!s) return;
+  const els = s.querySelectorAll('h1, h2, h3, p, .scene-tekst, .eft-instructie, label, .disclaimer span, .afsluiting p, .einde-box p');
+  let txt = '';
+  els.forEach(el => { const t = el.innerText || el.textContent; if (t && t.trim().length > 3) txt += t.trim() + '. '; });
+  if (!txt) return;
+  const u = new SpeechSynthesisUtterance(txt);
+  u.lang = taal === 'nl' ? 'nl-NL' : 'en-GB';
+  u.rate = 0.88; u.pitch = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const match = voices.find(x => x.lang === (taal === 'nl' ? 'nl-NL' : 'en-GB'))
+    || voices.find(x => x.lang.startsWith(taal === 'nl' ? 'nl' : 'en'));
+  if (match) u.voice = match;
+  window.speechSynthesis.speak(u);
+}
+
+function stopSpreken() {
+  if (herkenning) { try { herkenning.stop(); } catch(e){} herkenning = null; }
+  if (actieveMic) {
+    const btn = document.getElementById(actieveMic.btn);
+    const st = document.getElementById(actieveMic.st);
+    if (btn) btn.classList.remove('luisteren');
+    if (st) { st.textContent = ''; st.classList.remove('actief'); }
+    actieveMic = null;
+  }
+}
+
+function startSpreken(taId, micId, stId) {
+  const huidigeTaal = taal;
+  const t = T[huidigeTaal];
+  const herkLang = huidigeTaal === 'nl' ? 'nl-NL' : 'en-GB';
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    const st = document.getElementById(stId);
+    if (st) st.textContent = t.mic_fout;
+    return;
+  }
+
+  if (actieveMic && actieveMic.btn === micId) { stopSpreken(); return; }
+  stopSpreken();
+
+  herkenning = new SpeechRecognition();
+  herkenning.lang = herkLang;
+  herkenning.interimResults = true;
+  herkenning.continuous = false;
+
+  actieveMic = { btn: micId, st: stId, ta: taId };
+  const micBtn = document.getElementById(micId);
+  const stEl = document.getElementById(stId);
+  const ta = document.getElementById(taId);
+
+  micBtn.classList.add('luisteren');
+  stEl.textContent = t.mic_spreek;
+  stEl.classList.add('actief');
+
+  let base = ta.value;
+
+  herkenning.onresult = (e) => {
+    let interim = '';
+    let final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    if (final) { base = (base + ' ' + final).trim(); ta.value = base; }
+    if (interim) stEl.textContent = interim;
+  };
+
+  herkenning.onend = () => {
+    if (micBtn) micBtn.classList.remove('luisteren');
+    if (stEl) {
+      stEl.textContent = T[taal].mic_klaar;
+      stEl.classList.remove('actief');
+      setTimeout(() => { if (stEl) stEl.textContent = ''; }, 2000);
+    }
+    herkenning = null; actieveMic = null;
+  };
+
+  herkenning.onerror = (e) => {
+    if (micBtn) micBtn.classList.remove('luisteren');
+    if (stEl) {
+      stEl.textContent = e.error === 'not-allowed' ? T[taal].mic_geweig : T[taal].mic_fout;
+      stEl.classList.remove('actief');
+    }
+    herkenning = null; actieveMic = null;
+  };
+
+  try { herkenning.start(); } catch(err) {
+    if (stEl) { stEl.textContent = T[taal].mic_fout; stEl.classList.remove('actief'); }
+    if (micBtn) micBtn.classList.remove('luisteren');
+    herkenning = null; actieveMic = null;
+  }
+}
+</script>
+</body>
+</html>
